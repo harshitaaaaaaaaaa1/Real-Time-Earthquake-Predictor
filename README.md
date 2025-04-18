@@ -40,7 +40,7 @@ python3.x
 Linux/Mac Users
 
 **Steps to clone the repository**
-git clone [https://github.com/aditya-167/Realtime-Earthquake-forecasting.git](https://github.com/harshitaaaaaaaaaa1/Real-Time-Earthquake-Predictor.git)
+git clone (https://github.com/harshitaaaaaaaaaa1/Real-Time-Earthquake-Predictor.git)
 cd Realtime-Earthquake-forecasting
 
 
