@@ -39,9 +39,12 @@ xgboost==1.1.1
 python3.x
 Linux/Mac Users
 
-Note for windows user : install gitbash and proceed with same instruction as linux.
+**Steps to clone the repository**
+git clone [https://github.com/aditya-167/Realtime-Earthquake-forecasting.git](https://github.com/harshitaaaaaaaaaa1/Real-Time-Earthquake-Predictor.git)
+cd Realtime-Earthquake-forecasting
 
-EXECUTION STEPS
+
+**EXECUTION STEPS**
 1.Open VS Code
 2.Click on Terminal and select new terminal
 3. To create Virtual environment eneter ‘-m venv <<any environment name>>’ (If error occurs, download virtual environment for python)
