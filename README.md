@@ -73,7 +73,6 @@ Webapp/
 
 > **Environment:**  
 > Python 3.x  
-> Linux/Mac users preferred for smooth execution.
 
 ---
 
