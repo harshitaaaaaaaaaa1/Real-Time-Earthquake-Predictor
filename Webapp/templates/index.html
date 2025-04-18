@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Predicting Earthquakes</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoCwoAKV8TY8jVQsu56VWpw_VQ_9VKbjk&libraries=visualization&callback=initMap"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        #map {
+            height: 50vh;
+            width: 80%;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            margin: auto;
+        }
+        .btn-primary {
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.1);
+        }
+        .earthquake-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('home') }}">Earthquake Predictor</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('index') }}">Predict By Location</a></li>
+                <li><a href="{{ url_for('predict_man') }}">Predict Manually</a></li>
+                <li><a href="{{ url_for('about_page') }}">About Earthquake</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Worldwide Earthquake Forecaster</h1>
+        <p>Select a location on the map to predict the likelihood of an earthquake.</p>
+    </div>
+    
+    <div id="map"></div>
+
+    <div class="container">
+        <label>Select future date: <span id="label_slider_value">0</span></label>
+        <input type="range" min="0" max="365" value="0" id="slider_date_horizon" step="1" style='width: 100%;'>
+        <button id="predict_button" class="btn btn-primary" style="display:none;">Predict</button>
+    </div>
+
+    <script>
+        var map, marker, selectedLocation = null;
+
+        // Initialize the Google Map
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 2,
+                center: {lat: 0, lng: 0},
+                mapTypeId: 'roadmap'
+            });
+
+            // When the user clicks on the map, set the marker and location
+            google.maps.event.addListener(map, 'click', function(event) {
+                if (marker) marker.setMap(null);
+                selectedLocation = event.latLng;
+                marker = new google.maps.Marker({
+                    position: selectedLocation,
+                    map: map,
+                    title: "Selected Location"
+                });
+
+                // Show the Predict button after selecting the location
+                $('#predict_button').fadeIn();
+            });
+        }
+
+        // Fetch earthquake data based on the selected location
+        function fetchEarthquakeData(lat, lng) {
+            let startDate = "2020-01-01"; // Adjust as needed
+            let endDate = new Date().toISOString().split("T")[0]; // Current date
+            let url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${startDate}&endtime=${endDate}&latitude=${lat}&longitude=${lng}&maxradiuskm=100&limit=5`;
+
+            $.getJSON(url, function(data) {
+                if (data.features.length > 0) {
+                    let history = data.features.map(eq => {
+                        let mag = eq.properties.mag;
+                        let depth = eq.geometry.coordinates[2];
+                        let time = new Date(eq.properties.time).toLocaleDateString();
+                        return `📍 Date: ${time}, Magnitude: ${mag}, Depth: ${depth} km`;
+                    }).join("\n");
+
+                    // Show popup with earthquake data for 5 seconds
+                    showEarthquakePopup(history);
+                } else {
+                    alert("No significant earthquakes recorded in this area recently.");
+                }
+            });
+        }
+
+        // Show the popup with earthquake history
+        function showEarthquakePopup(history) {
+            // Create a popup div to display earthquake history
+            var popup = $('<div class="earthquake-popup"></div>').text(`Recent Earthquakes:\n${history}`);
+            $('body').append(popup);
+            popup.css({
+                'position': 'fixed',
+                'top': '50%',
+                'left': '50%',
+                'transform': 'translate(-50%, -50%)',
+                'background-color': '#fff',
+                'padding': '20px',
+                'border-radius': '10px',
+                'box-shadow': '0px 0px 10px rgba(0, 0, 0, 0.3)',
+                'z-index': '9999',
+                'font-family': 'Arial, sans-serif',
+                'font-size': '14px',
+                'text-align': 'center'
+            });
+
+            // Remove the popup after 5 seconds
+            setTimeout(function() {
+                popup.fadeOut(500, function() {
+                    $(this).remove();
+                });
+            }, 5000);
+        }
+
+        // Wait for user input on the slider and update the date label
+        $(document).ready(function() {
+            $('#slider_date_horizon').on('input', function() {
+                var horizon_date = new Date();
+                horizon_date.setDate(horizon_date.getDate() + parseInt(this.value));
+                $('#label_slider_value').text(`${horizon_date.getMonth() + 1}/${horizon_date.getDate()}/${horizon_date.getFullYear()}`);
+            });
+
+            // When the Predict button is clicked
+            $('#predict_button').click(function() {
+                if (!selectedLocation) {
+                    alert("⚠️ Please select a location on the map before predicting.");
+                    return;
+                }
+
+                let lat = selectedLocation.lat();
+                let lng = selectedLocation.lng();
+                let prediction = simulateEarthquakePrediction(lat, lng);
+                
+                // Show the prediction
+                alert(`🌍 Prediction for ${$('#label_slider_value').text()}:\n${prediction} chance of earthquake.`);
+
+                // Fetch and display earthquake data with a popup
+                fetchEarthquakeData(lat, lng);
+                $('#predict_button').fadeOut();
+            });
+        });
+
+        // Simulate an earthquake prediction
+        function simulateEarthquakePrediction(lat, lng) {
+            var predictions = ["Low", "Moderate", "High"];
+            return predictions[Math.floor(Math.random() * predictions.length)];
+        }
+    </script>
+</body>
+</html>

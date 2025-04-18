@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Earthquake Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        label {
+            font-size: 16px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        input[type="text"], input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        #slider_value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manual Earthquake Prediction</h1>
+    <form id="predictionForm">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" required><br><br>
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" required><br><br>
+
+        <label for="depth">Depth (km):</label>
+        <input type="text" id="depth" required><br><br>
+
+        <label for="magnitude">Magnitude:</label>
+        <input type="text" id="magnitude" required><br><br>
+
+        <label for="slider_date_horizon">Days to Predict:</label>
+        <input type="range" id="slider_date_horizon" min="0" max="30" value="7">
+        <span id="slider_value">7</span> days<br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Earthquake Prediction</h2>
+            <p><strong>Risk Level:</strong> <span id="risk_level"></span></p>
+            <p><strong>Chances of an Earthquake:</strong> <span id="modal_result"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('slider_date_horizon').addEventListener('input', function() {
+            document.getElementById('slider_value').textContent = this.value;
+        });
+
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let depth = parseFloat(document.getElementById('depth').value);
+            let magnitude = parseFloat(document.getElementById('magnitude').value);
+
+            let riskLevel, probabilityMessage;
+            if (depth < 50 && magnitude < 4.0) {
+                riskLevel = "Low";
+                probabilityMessage = "Very low chances of an earthquake.";
+            } else if ((depth >= 50 && depth <= 100) || (magnitude >= 4.0 && magnitude <= 6.0)) {
+                riskLevel = "Moderate";
+                probabilityMessage = "There is a moderate chance of an earthquake.";
+            } else {
+                riskLevel = "High";
+                probabilityMessage = "High probability of an earthquake. Stay alert!";
+            }
+
+            document.getElementById('risk_level').textContent = riskLevel;
+            document.getElementById('modal_result').textContent = probabilityMessage;
+            document.getElementById('myModal').style.display = 'block';
+        });
+
+        document.getElementsByClassName('close')[0].onclick = function() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('myModal')) {
+                document.getElementById('myModal').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

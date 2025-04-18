@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earthquake Prediction Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #E3F2FD, #FFFFFF);
+            text-align: center;
+            color: #333;
+        }
+        header {
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            background: #0288D1;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .info, .models {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            animation: fadeIn 2s;
+        }
+        .form-container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            animation: slideIn 1.5s;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background: #0288D1;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #01579B;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>Earthquake Prediction System</header>
+    <div class="container">
+        <div class="info">
+            <h2>About Earthquakes</h2>
+            <p>Earthquakes are caused by sudden movements of the Earth's tectonic plates. Seismic waves travel through the ground, leading to surface shaking.</p>
+            <p>They are classified based on magnitude: small (less than 4.0), moderate (4.0 - 6.0), and major (above 6.0).</p>
+        </div>
+        <div class="models">
+            <h2>Prediction Models</h2>
+            <p>Scientists use different models to predict earthquakes:</p>
+            <ul>
+                <li><strong>Machine Learning:</strong> Uses historical earthquake data to detect patterns.</li>
+                <li><strong>Seismic Hazard Mapping:</strong> Identifies high-risk zones based on past events.</li>
+                <li><strong>Deep Learning AI:</strong> Uses neural networks to analyze seismic wave patterns.</li>
+            </ul>
+        </div>
+        <div class="form-container">
+            <h2>Predict an Earthquake</h2>
+            <input type="text" id="latitude" placeholder="Enter Latitude">
+            <input type="text" id="longitude" placeholder="Enter Longitude">
+            <input type="text" id="magnitude" placeholder="Enter Magnitude">
+            <button onclick="predictEarthquake()">Predict</button>
+            <p id="result"></p>
+        </div>
+    </div>
+    <script>
+        function predictEarthquake() {
+            let magnitude = parseFloat(document.getElementById('magnitude').value);
+            let result = document.getElementById('result');
+            
+            if (magnitude < 4.0) {
+                result.innerHTML = "Low chance of an earthquake.";
+            } else if (magnitude >= 4.0 && magnitude <= 6.0) {
+                result.innerHTML = "Moderate chance of an earthquake.";
+            } else {
+                result.innerHTML = "High risk! Be prepared.";
+            }
+        }
+    </script>
+</body>
+</html>
