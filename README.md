@@ -1,8 +1,8 @@
-Project Overview
+**Project Overview**
 
 Countless dollars and entire scientific careers have been dedicated to predicting where and when the next big earthquake will strike. But unlike weather forecasting, which has significantly improved with the use of better satellites and more powerful mathematical models, earthquake prediction has been marred by repeated failure due to highly uncertain conditions of earth and its surroundings. Now, with the help of artificial intelligence, a growing number of scientists say changes in the way they can analyze massive amounts of seismic data can help them better understand earthquakes, anticipate how they will behave, and provide quicker and more accurate early warnings. This helps in hazzard assessments for many builders and real estate business for infrastructure planning from business perspective. Also many lives can be saved through early warning. This project aims a simple solution to above problem by predicting or forecasting likely places to have earthquake in next 7 days. For user-friendly part, this project has a web application that extracts live data updated every minute by USGS.gov and predicts next likely place world wide to get hit by an earthquake, hence a realtime solution is provided.
 
-Code files
+**Code files**
 Data/ : Notebook and HTML file ETL_USGS_EarthQuake.ipybn for ETL and EDA part of the project, and it also contains cleaned data in Earthquake.db & Earthquake_data.db format saved after ETL process
 
 models/ : Notebook and HTML file Earthquake-prediction-ML-workflow.ipybn which has all the implementation after related to Prediction steps and Machine Learning pipeline.
@@ -15,8 +15,7 @@ For ETL walkthrough open Data/ETL_USGS_EarthQuake.ipybn or Data/ETL_USGS_EarthQu
 
 Next, go to models/Earthquake-prediction-ML-workflow.ipybn or models/Earthquake-prediction-ML-workflow.html for ML and workflow.
 
-Instructions to run the project
-Requirements
+**Requirements**
 
 click==7.1.2
 Flask==1.1.2
